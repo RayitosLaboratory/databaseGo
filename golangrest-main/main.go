@@ -10,7 +10,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mssql"
 )
 
-type Platillos struct {
+type Productos struct {
 	ID          uint   `gorm:"column:idPlatillo;primary_key"`
 	Nombre      string `json:"nombre"`
 	Descripcion string `json:"descripcion"`
@@ -66,13 +66,13 @@ func main() {
 	//TABLA PLATILLOS
 
 	// Migrar la estructura del modelo a la base de datos
-	db.AutoMigrate(&Platillos{})
+	db.AutoMigrate(&Productos{})
 	////////////////////////////////////////////////////
 	//CRUD SELECT
 	// Definir el endpoint GET para obtener todos los platillos
 	r.HandleFunc("/platillos", func(w http.ResponseWriter, r *http.Request) {
 		// Obtener todos los registros de la tabla de platillos
-		var platillos []Platillos
+		var platillos []Productos
 		db.Find(&platillos)
 
 		// Convertir la lista de platillos a formato JSON
@@ -91,7 +91,7 @@ func main() {
 	// Definir el endpoint POST para crear nuevos platillos
 	r.HandleFunc("/platillos", func(w http.ResponseWriter, r *http.Request) {
 		// Decodificar el cuerpo de la solicitud HTTP a una estructura de Platillos
-		var nuevoPlatillo Platillos
+		var nuevoPlatillo Productos
 		err := json.NewDecoder(r.Body).Decode(&nuevoPlatillo)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -121,7 +121,7 @@ func main() {
 		id := params["id"]
 
 		// Obtener el platillo existente de la base de datos
-		var platillo Platillos
+		var platillo Productos
 		err := db.Where("idPlatillo = ?", id).First(&platillo).Error
 		if err != nil {
 			http.Error(w, "Platillo no encontrado", http.StatusNotFound)
